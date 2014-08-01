@@ -20,7 +20,7 @@
                (not (:available vga)))
       (println "Discovered VGA unavailable but laptop display inactive.")
       (println "Activating laptop")
-      (sh "xrandr" "--output" "LVDS1" "--auto"))))
+      (sh "xrandr" "--output" "VGA1" "--off" "--output" "LVDS1" "--auto"))))
 
 (defn check
   "Run the monitoring check itself."
