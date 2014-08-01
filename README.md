@@ -13,6 +13,10 @@ based on connected monitors.
 
 TODO
 
+## Development
+
+- Testing: `lein midje`
+
 ## License
 
 Copyright © 2014 Tim McCormack
