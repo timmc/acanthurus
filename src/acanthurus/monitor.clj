@@ -3,19 +3,29 @@
   (:require [acanthurus.xrandr :as xrandr]
             [clojure.java.shell :refer [sh]]))
 
+(defn check-external-monitor
+  [xstate]
+  (let [laptop (get xstate "LVDS1")
+        vga (get xstate "VGA1")]
+    (when (and (:available vga)
+               (not (:active vga)))
+      (println "Discovered VGA available but not active.")
+      (println "Activating VGA1")
+      (sh "xrandr" "--output" "VGA1" "--auto")
+      (when (:active laptop)
+        (println "Deactivating laptop")
+        (sh "xrandr" "--output" "LVDS1" "--off")))
+    (when (and (not (:active laptop))
+               (not (:available vga)))
+      (println "Discovered VGA unavailable but laptop display inactive.")
+      (println "Activating laptop")
+      (sh "xrandr" "--output" "LVDS1" "--auto"))))
+
 (defn check
   "Run the monitoring check itself."
   []
-  (let [xstate (xrandr/query)
-        laptop (get xstate "LVDS1")
-        vga (get xstate "VGA1")]
-    (println laptop vga)
-    (when (and (:available vga)
-               (not (:active vga)))
-      (println "disable laptop, enable vga"))
-    (when (and (not (:active laptop))
-               (not (:available vga)))
-      (println "enable laptop"))))
+  (let [xstate (xrandr/query)]
+    (check-external-monitor xstate)))
 
 (defn stop?
   "Yield true when monitoring should be ended."
