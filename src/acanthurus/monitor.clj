@@ -1,7 +1,8 @@
 (ns acanthurus.monitor
   "Monitor and update displays."
   (:require [acanthurus.xrandr :as xrandr]
-            [clojure.java.shell :refer [sh]]))
+            [clojure.java.shell :refer [sh]])
+  (:gen-class))
 
 (defn check-external-monitor
   [xstate]
